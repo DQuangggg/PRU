@@ -15,6 +15,13 @@ public class CharacterController : MonoBehaviour
     Animator animator;
     Rigidbody2D rb;
 
+    public AudioSource audioSource;
+    [Header("SoundFX")]
+    [SerializeField]
+    public AudioClip jumpClip;
+    [SerializeField]
+    public AudioClip deathClip;
+
     public int hearts = 5;
 
     void Start()
@@ -22,6 +29,7 @@ public class CharacterController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         facingRight = true;
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -47,6 +55,7 @@ public class CharacterController : MonoBehaviour
             {
                 animator.SetBool("jump", true);
                 grounded = false;
+                audioSource.PlayOneShot(jumpClip);
                 rb.velocity = new Vector2(rb.velocity.x, jump);
             }
         }
@@ -80,6 +89,7 @@ public class CharacterController : MonoBehaviour
         {
             animator.SetBool("dead", true);
             Instantiate(BloodEffect, transform.position, transform.rotation);
+            audioSource.PlayOneShot(deathClip);
             StartCoroutine(waiter());
         }
     }
